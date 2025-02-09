@@ -1,13 +1,15 @@
 import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router'
 import { useUser } from '../context/userContext'
+import { auth } from '../config/firebase'
 
 const ProtectedRoute = ({ children }) => {
     const navigate = useNavigate()
-    const user = useUser()
-    console.log(user)
+    const { user, setUser } = useUser()
     useEffect(() => {
-        if (false) {
+        const myUser = localStorage.getItem("user") && JSON.parse(localStorage.getItem("user"))
+        setUser(myUser)
+        if (!myUser) {
             navigate('/login')
         }
     }, [])

@@ -1,10 +1,18 @@
+import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import React, { useState } from 'react';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
+import { FaFacebookSquare, FaGoogle } from "react-icons/fa";
+import { auth, provider } from '../config/firebase';
+import { toast, ToastContainer } from 'react-toastify';
+import MyToastConntainer from '../components/MyToastConntainer';
+import { getDocument } from '../utils/firebasehelpers';
 
 export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errors, setErrors] = useState({});
+
+    const navigate = useNavigate()
 
     const validate = () => {
         const newErrors = {};
@@ -29,12 +37,53 @@ export default function Login() {
         e.preventDefault();
         if (validate()) {
             console.log('Logging in with:', { email, password });
-            // Add login logic here
+            signInWithEmailAndPassword(
+                auth,
+                email,
+                password
+            ).then(async (userCredential) => {
+                const user = userCredential.user;
+                const userDoc = await getDocument("users", user.uid)
+                localStorage.setItem("user", JSON.stringify(userDoc));
+                navigate("/");
+                setErrors(false);
+            }).catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                toast.error(errorCode);
+            });
         }
     };
 
+    const loginWithGoogle = () => {
+        signInWithPopup(auth, provider)
+            .then((result) => {
+                const credential = GoogleAuthProvider.credentialFromResult(result);
+                const token = credential.accessToken;
+                const user = result.user;
+                console.log(user)
+                localStorage.setItem("user", JSON.stringify(user))
+                toast.success("Register successfull")
+                setTimeout(() => {
+                    navigate('/')
+                }, 2000);
+            }).catch((error) => {
+                // Handle Errors here.
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                // The email of the user's account used.
+                const email = error.customData.email;
+                // The AuthCredential type that was used.
+                const credential = GoogleAuthProvider.credentialFromError(error);
+                toast.error(errorCode)
+                console.log(credential);
+                console.log(error);
+            });
+    }
+
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100">
+            <MyToastConntainer />
             <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">
                 <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Login</h2>
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -73,6 +122,12 @@ export default function Login() {
                         Sign up here
                     </Link>
                 </p>
+                <div>
+                    <button onClick={loginWithGoogle} className='flex w-full bg-gray-400 mt-3 justify-center gap-2 items-center text-white py-2 rounded-lg'>
+                        <FaGoogle size={28} />
+                        <p>Login with Google</p>
+                    </button>
+                </div>
             </div>
         </div>
     );

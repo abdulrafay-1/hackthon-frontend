@@ -24,7 +24,7 @@ createRoot(document.getElementById('root')).render(
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/*" element={<NotFound />} />
         </Routes>
-      </StrictMode>,
+      </StrictMode>
     </BrowserRouter>
   </UserProvider>  // Wrap App component with BrowserRouter for routing
 )
