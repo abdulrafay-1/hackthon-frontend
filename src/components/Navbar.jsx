@@ -12,7 +12,7 @@ const Navbar = () => {
         navigate('/login')
     }
     return (
-        <nav className="flex items-center justify-between bg-white p-4 shadow-md">
+        <nav className="flex sticky top-0 z-10 items-center justify-between bg-white p-4 shadow-md">
             {/* Logo */}
             <Link to={'/'} className="text-xl font-bold text-gray-800">Scrolllink</Link>
 
@@ -33,7 +33,7 @@ const Navbar = () => {
                     alt="User Profile"
                     className="w-10 h-10 border border-gray-300 object-cover p-0.5 rounded-full"
                 /></div>
-                <button onClick={logout} className="px-3 cursor-pointer font-medium text-sm md:text-base bg-pink-400 text-white py-2 border border-white/50 rounded-md">
+                <button onClick={logout} className="px-3 cursor-pointer font-medium text-sm md:text-base bg-primary text-white py-2 border border-white/50 rounded-md">
                     Logout
                 </button>
             </div>
