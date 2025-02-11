@@ -36,7 +36,8 @@ const Register = () => {
                     email: email.current.value,
                     displayName: name.current.value,
                     photoURL: uploadImageUrl,
-                    uid: user.uid
+                    uid: user.uid,
+                    requests: []
                 }
                 const data = await setDoc(doc(db, "users", user.uid), userObj);
                 console.log(data)
@@ -56,12 +57,20 @@ const Register = () => {
 
     const registerWithGoogle = () => {
         signInWithPopup(auth, provider)
-            .then((result) => {
+            .then(async (result) => {
                 const credential = GoogleAuthProvider.credentialFromResult(result);
                 const token = credential.accessToken;
                 const user = result.user;
-                console.log(user)
-                localStorage.setItem("user", JSON.stringify(user))
+                const userObj = {
+                    email: user.email,
+                    displayName: user.displayName,
+                    photoURL: user.photoURL,
+                    uid: user.uid,
+                    requests: []
+                }
+                const data = await setDoc(doc(db, "users", user.uid), userObj);
+                console.log(data)
+                localStorage.setItem("user", JSON.stringify(userObj))
                 toast.success("Register successfull")
                 setTimeout(() => {
                     navigate('/')

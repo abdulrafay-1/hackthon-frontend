@@ -2,10 +2,11 @@ import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { FaFacebookSquare, FaGoogle } from "react-icons/fa";
-import { auth, provider } from '../config/firebase';
+import { auth, db, provider } from '../config/firebase';
 import { toast, ToastContainer } from 'react-toastify';
 import MyToastConntainer from '../components/MyToastConntainer';
 import { getDocument } from '../utils/firebasehelpers';
+import { doc, setDoc } from 'firebase/firestore';
 
 export default function Login() {
     const [email, setEmail] = useState('');
@@ -57,10 +58,19 @@ export default function Login() {
 
     const loginWithGoogle = () => {
         signInWithPopup(auth, provider)
-            .then((result) => {
+            .then(async (result) => {
                 const credential = GoogleAuthProvider.credentialFromResult(result);
                 const token = credential.accessToken;
                 const user = result.user;
+                const userObj = {
+                    email: user.email,
+                    displayName: user.displayName,
+                    photoURL: user.photoURL,
+                    uid: user.uid,
+                    requests: []
+                }
+                const data = await setDoc(doc(db, "users", user.uid), userObj);
+                console.log(data)
                 console.log(user)
                 localStorage.setItem("user", JSON.stringify(user))
                 toast.success("Register successfull")
@@ -70,10 +80,6 @@ export default function Login() {
             }).catch((error) => {
                 // Handle Errors here.
                 const errorCode = error.code;
-                const errorMessage = error.message;
-                // The email of the user's account used.
-                const email = error.customData.email;
-                // The AuthCredential type that was used.
                 const credential = GoogleAuthProvider.credentialFromError(error);
                 toast.error(errorCode)
                 console.log(credential);

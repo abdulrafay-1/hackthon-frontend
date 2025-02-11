@@ -79,11 +79,16 @@ const FriendsRequestSection = () => {
     };
 
     const checkReqStatus = (postUser) => {
-        const requestSent = postUser.requests?.find(requests => requests.senderId === user.uid)
-        const friends = postUser.requests.find(req => req.senderId || req.receiverId === user.uid && req.status === "accepted")
+        const requestSent = postUser.requests?.find(reqs => reqs.senderId === user.uid)
+        const friends = postUser.requests?.find(req => {
+            return ((req.senderId === user.uid || req.receiverId === user.uid) && (req.status === "accepted"))
+        })
+        // console.log(JSON.stringify(friends))
         if (friends) {
+            console.log("friends", friends)
             return friends.status
         }
+        console.log("else")
         if (requestSent) return requestSent.status
         return false
     };
