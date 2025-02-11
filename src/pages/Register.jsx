@@ -159,13 +159,13 @@ const Register = () => {
                         </div>
                         <div className="w-full mt-4">
                             <div
-                                className={`border text-center rounded-lg w-full py-2 cursor-pointer ${uploadImageUrl && "border-gray-300"}`}
+                                className={`border text-center text-sm rounded-lg hover:bg-gray-200 w-full py-2 cursor-pointer ${uploadImageUrl && "border-gray-300"}`}
                                 onClick={uploadImage}
                             >{uploadImageUrl ? "Image Uploaded" : "Upload Image"}</div>
                         </div>
                         <p className="mt-2 text-center text-red-500">{error && error}</p>
                         <div className="flex items-center justify-end mt-4">
-                            <button type="submit" className="px-6 py-2 flex-1 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50">
+                            <button type="submit" className="px-6 py-2 flex-1 font-medium tracking-wide text-white hover:bg-cyan-600 cursor-pointer capitalize transition-colors duration-300 transform bg-primary rounded-lg  focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50">
                                 Register
                             </button>
                         </div>
